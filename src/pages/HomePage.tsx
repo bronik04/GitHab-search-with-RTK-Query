@@ -7,7 +7,7 @@ import { useDebounce } from "../hooks/debounce";
 import RepoCard from "../components/repo-card";
 
 const HomePage = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("bronik04");
   const [dropdown, setDropdown] = useState(false);
   const debounce = useDebounce(search);
   const { isLoading, isError, data } = useSearchUsersQuery(debounce, {
@@ -20,6 +20,7 @@ const HomePage = () => {
 
   const handleClick = (username: string) => {
     fetchRepos(username);
+    setDropdown(false);
   };
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const HomePage = () => {
   return (
     <div
       className={
-        "flex justify-center pt-10 mx-auto h-screen w-screen bg-gray-200"
+        "flex justify-center pt-10 mx-auto min-h-screen w-screen bg-gray-200"
       }
     >
       {isError && (
