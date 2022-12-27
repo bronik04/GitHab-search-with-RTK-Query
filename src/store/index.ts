@@ -1,5 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit";
 import {githabApi} from "./githab/githab.api";
+import {setupListeners} from "@reduxjs/toolkit/query";
 
 export const store = configureStore({
     reducer: {
@@ -7,3 +8,5 @@ export const store = configureStore({
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(githabApi.middleware)
 })
+
+setupListeners(store.dispatch);

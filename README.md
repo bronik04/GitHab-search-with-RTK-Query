@@ -2,7 +2,6 @@
 
 ## Technology 
 - TypeScript
-- Redux 
-- Toolkit
+- Redux Toolkit
 - RTKQuery 
 - Tailwind CSS

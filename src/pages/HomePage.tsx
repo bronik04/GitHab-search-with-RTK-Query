@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useSearchUsersQuery } from "../store/githab/githab.api";
+import {
+  useLazyGetUserReposQuery,
+  useSearchUsersQuery,
+} from "../store/githab/githab.api";
 import { useDebounce } from "../hooks/debounce";
+import RepoCard from "../components/repo-card";
 
 const HomePage = () => {
   const [search, setSearch] = useState("");
@@ -8,7 +12,15 @@ const HomePage = () => {
   const debounce = useDebounce(search);
   const { isLoading, isError, data } = useSearchUsersQuery(debounce, {
     skip: debounce.length < 3,
+    refetchOnFocus: true,
   });
+
+  const [fetchRepos, { isLoading: isReposLoading, data: repos }] =
+    useLazyGetUserReposQuery();
+
+  const handleClick = (username: string) => {
+    fetchRepos(username);
+  };
 
   useEffect(() => {
     setDropdown(debounce.length > 3 && data?.length! > 0);
@@ -42,6 +54,7 @@ const HomePage = () => {
             {data?.map((user) => (
               <li
                 key={user.id}
+                onClick={() => handleClick(user.login)}
                 className={
                   "py-2 px-4 hover:bg-gray-500 hover:text-white transition-colors cursor-pointer rounded-lg"
                 }
@@ -51,6 +64,12 @@ const HomePage = () => {
             ))}
           </ul>
         )}
+        <div className={"container"}>
+          {isReposLoading && <p>Loading repos...</p>}
+          {repos?.map((repo) => (
+            <RepoCard repo={repo} key={repo.id} />
+          ))}
+        </div>
       </div>
     </div>
   );
